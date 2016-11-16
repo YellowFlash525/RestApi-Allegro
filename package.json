@@ -1,0 +1,30 @@
+{
+  "name": "restapi",
+  "version": "1.0.0",
+  "description": "Application for univeristy",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Magic525@bitbucket.org/Magic525/restapi.git"
+  },
+  "keywords": [
+    "REST",
+    "NodeJS",
+    "AngularJS",
+    "UAM"
+  ],
+  "author": "Magic525",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/Magic525/restapi#readme",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-cookies": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "body-parser": "^1.0.1",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.2"
+  }
+}
