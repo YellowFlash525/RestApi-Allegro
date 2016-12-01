@@ -3,38 +3,44 @@
 <head>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 
-  <title>Contact List App</title>
+<title>Events</title>
 </head>
 <body>
   <div class="container" ng-controller="AppCtrl">
-    <h1>Contact List App</h1>
+    <h1>Events</h1>
 
     <table class="table">
       <thead>
         <tr>
-          <th>Name</th>         
+          <th>Name</th>
           <th>Category</th>
           <th>Place</th>
           <th>Date</th>
+          <th></th>
         </tr>
+      </thead>
+      <tbody>
         <tr>
           <td><input class="form-control" ng-model="event.name"></td>
           <td><input class="form-control" ng-model="event.category"></td>
           <td><input class="form-control" ng-model="event.place"></td>
           <td><input class="form-control" ng-model="event.date"></td>
-          <td><button class="btn btn-primary" ng-click="addEvent()">Add Event</button></td>
+          <td><button class="btn btn-default" ng-click="addEvent()">Add Event</button></td>
+          <td>
+            <button class="btn btn-info" ng-click="updateEvent()">Update Event</button>
+            <button class="btn btn-info" ng-click="deselect()">Clear</button>
+          </td>
         </tr>
-      </thead>
-      <tbody>
         <tr ng-repeat="event in events">
           <td>{{event.name}}</td>
           <td>{{event.category}}</td>
           <td>{{event.place}}</td>
           <td>{{event.date}}</td>
+          <td><button class="btn btn-default" ng-click="removeEvent(event._id)">Remove Event</button></td>
+          <td><button class="btn btn-warning" ng-click="editEvent(event._id)">Edit Event</button></td>
         </tr>
       </tbody>
     </table>
