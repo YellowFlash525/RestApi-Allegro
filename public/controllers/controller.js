@@ -12,4 +12,12 @@ var refresh = function() {
 
 refresh();
 
+$scope.addEvent = function() {
+  console.log($scope.event);
+  $http.post('/events', $scope.event).success(function(response) {
+    console.log(response);
+    refresh();
+  });
+};
+
 }]);﻿
