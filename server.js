@@ -1,71 +1,35 @@
-var express = require('express');
-var app = express();
-var mongojs = require('mongojs');
-var db = mongojs('events', ['events']);
-var bodyParser = require('body-parser');
+//MODULES
+var express 	= require('express');
+var app 		= express();
+var bodyParser 	= require('body-parser');
+var mongoose   	= require('mongoose');
 
-app.use(express.static(__dirname + "/public"));
+var port 		= process.env.PORT || 8080;
+
+var User = require('./models/userModel');
+var Event = require('./models/eventModel');
+
+var routeUsers = require('./routes/userRoute.js');
+var routeEvents = require('./routes/eventRoute.js');
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Wyświetlenie wydarzeń
-app.get('/events', function (req, res) {
-	console.log('I received a GET request');
+mongoose.connect('mongodb://Rest_user:restapi25@ds159737.mlab.com:59737/restapi');
 
-	db.events.find(function (err, docs) {
-		console.log(docs);
-		res.json(docs);
-	});
+var router = express.Router();
+router.use(function(req,res,next){
+	console.log('Req');
+	next();
 });
 
-// Dadanie wydarzenia
-app.post('/events', function (req, res) {
-	console.log(req.body);
-
-	db.events.insert(req.body, function(err, doc) {
-		res.json(doc);
-	});
+app.use('/', express.static(__dirname));
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/public/index.html');
 });
 
-// Usunięcie wydarzenia
-app.delete('/events/:id', function (req, res) {
-	var id = req.params.id;
-	console.log(id);
-	
-	db.events.remove({_id: mongojs.ObjectId(id)}, function (err, doc) {
-		res.json(doc);
-	});
-});
+app.use('/api', routeEvents);
+app.use('/api', routeUsers);
 
-// Wyświetlenie pojedyńczego wydarzenia
-app.get('/events/:id', function (req, res) {
-	var id = req.params.id;
-	console.log(id);
-
-	db.events.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
-		res.json(doc);
-	});
-});
-
-// Modyfikacja pojedyńczego wydarzenia
-app.put('/events/:id', function (req, res) {
-	var id = req.params.id;
-	console.log(req.body.name);
-
-	db.events.findAndModify({
-		query: {_id: mongojs.ObjectId(id)},
-		update: {$set: 
-			{
-				name: req.body.name,
-				category: req.body.category,
-				place: req.body.place,
-				date: req.body.date
-			}
-		},
-		new: true}, function (err, doc) {
-			res.json(doc);
-		}
-	);
-});
-
-app.listen(3000);
-console.log("server running on port 3000");
+app.listen(port);
+console.log("server running on port " + port);
