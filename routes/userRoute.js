@@ -1,7 +1,7 @@
 var express    = require('express');        
-var router = express.Router();
+var router 	   = express.Router();
 
-var User = require('../models/userModel');
+var User 	   = require('../models/userModel');
 
 
 router.route('/users')
@@ -35,5 +35,70 @@ router.route('/users')
 		      res.json({ message: 'Successful created new user.'});
 		    });
 		 }
+	});
+
+router.route('/users/:user_id')
+	// get the bear with that id
+	.get(function(req, res) {
+		User.findById(req.params.user_id, function(err, user) {
+			if (err){
+				console.log(err);
+				return res.status(404).send({message: 'Couldn\'t find this User'})
+			}
+			if(!user){
+				return res.status(404).send({message: 'No such user'})
+			}
+			res.status(200);
+			res.json(user);
+		});
+	})
+
+	// update the bear with this id
+	.put(function(req, res) {
+		User.findById(req.params.user_id, function(err, user) {
+			if (err){
+				console.log(err);
+				return res.status(404).send({message: 'Couldn\'t find this User'})
+			}
+			if(!user){
+				return res.status(404).send({message: 'No such user'})
+			}
+
+			User.name = req.body.name;
+
+			User.save(function(err) {
+				if (err){
+					res.status(400);
+					res.send(err);
+				}
+				else {
+					res.status(201);
+					res.json({ message: 'User updated!' });
+				}
+			});
+
+		});
+	})
+	// delete the bear with this id
+	.delete(function(req, res) {
+		User.findById(req.params.user_id, function(err, user){
+			if(err){
+				console.log(err);
+				return res.status(404).send({ message: 'User not found'})
+			}
+			if(!user){
+				return res.status(404).send({message: 'No such user'})
+			}
+			User.remove({
+				_id: req.params.user_id
+			}, function(err, user) {
+				if (err){
+					console.log(err);
+					return res.status(404).send({message: 'Deleting user went wrong'})
+				}
+				res.status(204);
+				res.json({ message: 'User deleted' });
+			});	
+		});
 	});
 module.exports = router;
