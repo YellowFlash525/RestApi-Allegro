@@ -45,4 +45,4 @@ $scope.deselect = function() {
 	$scope.event = "";
 }
 
-}]);﻿
+}]);

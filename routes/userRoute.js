@@ -1,6 +1,5 @@
 var express    = require('express');        
 var router 	   = express.Router();
-
 var User 	   = require('../models/userModel');
 
 
@@ -18,7 +17,7 @@ router.route('/users')
 	})
 	.post(function(req,res){
 		if (!req.body.userLogin || !req.body.userPassword) {
-		    res.json({ message: 'Please pass name and password.'});
+		    res.status(401);
 		} else {
 		    var newUser = new User({
 		      userLogin: req.body.userLogin,
@@ -57,7 +56,6 @@ router.route('/users/:user_id')
 	.put(function(req, res) {
 		User.findById(req.params.user_id, function(err, user) {
 			if (err){
-				console.log(err);
 				return res.status(404).send({message: 'Couldn\'t find this User'})
 			}
 			if(!user){
@@ -83,7 +81,6 @@ router.route('/users/:user_id')
 	.delete(function(req, res) {
 		User.findById(req.params.user_id, function(err, user){
 			if(err){
-				console.log(err);
 				return res.status(404).send({ message: 'User not found'})
 			}
 			if(!user){
@@ -93,7 +90,6 @@ router.route('/users/:user_id')
 				_id: req.params.user_id
 			}, function(err, user) {
 				if (err){
-					console.log(err);
 					return res.status(404).send({message: 'Deleting user went wrong'})
 				}
 				res.status(204);
