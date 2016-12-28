@@ -7,6 +7,9 @@ var eventModel   = new Schema({
 	eventDate: Date,
 	eventPlace: String,
 	eventUsers: Array,
+},
+{
+    versionKey: false
 });
 
 module.exports = mongoose.model('Event', eventModel);

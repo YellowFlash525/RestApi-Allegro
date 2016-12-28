@@ -29,7 +29,7 @@ router.route('/users')
 		    newUser.save(function(err) {
 		      if (err) {
 				res.status(409);
-		        return res.json({ message: 'Username already exists.'});
+		        return res.json({ message: 'User already exists.'});
 		      }
 		      res.json({ message: 'Successful created new user.'});
 		    });
@@ -70,8 +70,7 @@ router.route('/users/:user_id')
 					res.send(err);
 				}
 				else {
-					res.status(201);
-					res.json({ message: 'User updated!' });
+					return res.status(201).send({ message: 'User updated!' });
 				}
 			});
 
@@ -92,8 +91,7 @@ router.route('/users/:user_id')
 				if (err){
 					return res.status(404).send({message: 'Deleting user went wrong'})
 				}
-				res.status(204);
-				res.json({ message: 'User deleted' });
+				return res.status(204).send({ message: 'User deleted' });
 			});	
 		});
 	});
