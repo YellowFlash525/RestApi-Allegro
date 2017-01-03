@@ -4,6 +4,8 @@ var app 		= express();
 var morgan		= require('morgan');
 var bodyParser 	= require('body-parser');
 var mongoose   	= require('mongoose');
+var config 		= require("./config/secret");
+var passport 	= require('passport');
 
 var port 		= process.env.PORT || 8080;
 
@@ -13,9 +15,10 @@ var Event = require('./models/eventModel');
 var routeUsers = require('./routes/userRoute.js');
 var routeEvents = require('./routes/eventRoute.js');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+app.use(passport.initialize())
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://Rest_user:restapi25@ds159737.mlab.com:59737/restapi');
@@ -28,7 +31,7 @@ router.use(function(req,res,next){
 
 app.use('/', express.static(__dirname));
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/public/index.html');
+  res.send("Witam na stronie Mariana i Kamila");
 });
 
 app.use('/apirest', routeEvents);

@@ -4,7 +4,7 @@ var Schema       = mongoose.Schema;
 var eventModel   = new Schema({
     eventName: String,
 	eventCategory: String,
-	eventDate: Date,
+	eventDate: String,
 	eventPlace: String,
 	eventUsers: Array,
 },
