@@ -11,7 +11,7 @@ var getEvents = function(req,res){
 			res.json(event);
 		}
 	});
-} 
+}; 
 
 // Create endpoint /api/events for POST
 var postEvent = function(req,res){
@@ -20,7 +20,7 @@ var postEvent = function(req,res){
 		eventCategory: req.body.eventCategory,
 		eventDate: req.body.eventDate,
 		eventPlace: req.body.eventPlace,
-		eventUsers: req.body.eventUsers
+		eventUserID: req.user._id
 	});
 	newEvent.save(function(err){
 		if(err){
@@ -61,7 +61,7 @@ var putEvent = function(req, res) {
 			return res.status(404).send({message: 'No such event'})
 		}
 
-		Event.name = req.body.name;
+		Event.eventName = req.body.eventName;
 		Event.save(function(err) {
 			if (err){
 				res.status(400);

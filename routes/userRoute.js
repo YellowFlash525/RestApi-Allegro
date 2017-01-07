@@ -17,4 +17,7 @@ router.route('/users/:user_id')
 	// delete the bear with this id
 	.delete(authController.isAuthenticated, userController.deleteUser);
 
+router.route('/users/:user_id/events/created')
+	.get(authController.isAuthenticated, userController.OwnedEvents)
+
 module.exports = router;

@@ -1,4 +1,6 @@
+'use strict'
 var User 	   = require('../models/userModel');
+var Event 	   = require('../models/eventModel');
 
 // Create endpoint /api/users for GET
 var getUsers = function(req,res){
@@ -52,6 +54,9 @@ var getUser = function(req, res) {
 
 // Create endpoint /api/users/:id for PUT
 var putUser = function(req, res) {
+	if(req.params.user_id != req.user._id){
+		return res.status(401).send({ message: "You don't have permissions to update another user"});
+	} 
 	User.findById(req.params.user_id, function(err, user) {
 		if (err){
 			return res.status(404).send({message: 'Couldn\'t find this User'})
@@ -76,6 +81,9 @@ var putUser = function(req, res) {
 
 // Create endpoint /api/users/:id for DELETE
 var deleteUser = function(req, res) {
+	if(req.params.user_id != req.user._id){
+		return res.status(401).send({ message: "You don't have permissions to delete another user"});
+	} 
 	User.findById(req.params.user_id, function(err, user){
 		if(err){
 			return res.status(404).send({ message: 'User not found'})
@@ -95,6 +103,26 @@ var deleteUser = function(req, res) {
 	});
 };
 
-module.exports = {getUsers, postUser, getUser, putUser, deleteUser}
+var OwnedEvents = function(req, res) {
+	if(req.params.user_id != req.user._id){
+		return res.status(401).send({ message: "You don't have permissions to check events belong to another user"});
+	} 
+	Event.find({eventUserID: req.user._id}, function(err, events){
+		if(err){
+			return res.status(404).send({ message: 'Events not found'});
+		}
+		if(!events){
+			return res.status(404).send({ message: 'No such events'});
+		}
+		for(var i = 0; i < events.length; i++){
+			var objectEvent = events[i].toObject();
+			delete objectEvent.eventUserID;
+			events[i] = objectEvent;
+		}
+		res.status(200).send(events);
+	});
+};
+
+module.exports = {getUsers, postUser, getUser, putUser, deleteUser, OwnedEvents}
 
 

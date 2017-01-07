@@ -6,7 +6,10 @@ var eventModel   = new Schema({
 	eventCategory: String,
 	eventDate: String,
 	eventPlace: String,
-	eventUsers: Array,
+	eventUserID: {
+		type: Schema.Types.ObjectId,
+		ref: 'User'
+	}
 },
 {
     versionKey: false
