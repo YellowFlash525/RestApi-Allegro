@@ -1,24 +1,23 @@
 'use strict'
 var User 	   = require('../models/userModel');
 var Event 	   = require('../models/eventModel');
+var bcrypt       = require('bcryptjs');
 
-// Create endpoint /api/users for GET
+// Create endpoint /apirest/users for GET
 var getUsers = function(req,res){
 	User.find(function(err,users){
 		if(err){
-			res.status(400);
-			return res.send(err);
+			return res.status(400).json({message: 'Users not found'});
 		}else{
-			res.status(200);
-			res.json(users);
+			return res.status(200).json(users);
 		}
 	});
 };
 
-// Create endpoint /api/users for POST
+// Create endpoint /apirest/users for POST
 var postUser = function(req,res){
 	if (!req.body.userLogin || !req.body.userPassword) {
-		res.status(401);
+		return res.status(401);
 	} else {
 		var newUser = new User({
 		   userLogin: req.body.userLogin,
@@ -28,101 +27,94 @@ var postUser = function(req,res){
 		});
 		// save the user
 		newUser.save(function(err) {
-		if (err) {
-		   res.status(409);
-		   return res.json({ message: 'User already exists.'});
-		}
-		res.json({ message: 'Successful created new user.'});
+			if (err){
+				return res.status(409).json({ message: 'User already exists.'});	
+			} else {
+				return res.location("/users/" + newUser._id).json({ message: 'Successful created new user.', user: newUser});
+			}
 		});
 	}
 };
 
-// Create endpoint /api/users/:id for GET
+// Create endpoint /apirest/users/:id for GET
 var getUser = function(req, res) {
 	User.findById(req.params.user_id, function(err, user) {
 		if (err){
-			console.log(err);
-			return res.status(404).send({message: 'Couldn\'t find this User'})
+			return res.status(404).end();
 		}
 		if(!user){
-			return res.status(404).send({message: 'No such user'})
+			return res.status(404).end();
 		}
-		res.status(200);
-		res.json(user);
+		return res.status(200).json(user);
 	});
 };
 
-// Create endpoint /api/users/:id for PUT
-var putUser = function(req, res) {
+// Create endpoint /apirest/users/:id for PATCH
+var updateUser = function(req, res) {
 	if(req.params.user_id != req.user._id){
-		return res.status(401).send({ message: "You don't have permissions to update another user"});
+		return res.status(401).json({ message: "You don't have permissions to update another user"});
 	} 
-	User.findById(req.params.user_id, function(err, user) {
-		if (err){
-			return res.status(404).send({message: 'Couldn\'t find this User'})
+	// retrieve the password field
+	var password = req.body.userPassword;
+	// update it with hash
+	req.body.userPassword = bcrypt.hashSync(password);
+
+	User.findByIdAndUpdate({ _id : req.params.user_id}, req.body, function(err, user) {
+		if(err){
+			return res.status(404).end();
 		}
 		if(!user){
-			return res.status(404).send({message: 'No such user'})
+			return res.status(404).end();
 		}
-
-		User.name = req.body.name;
-
-		User.save(function(err) {
-			if (err){
-				res.status(400);
-				res.send(err);
-			}
-			else {
-				return res.status(201).send({ message: 'User updated!' });
-			}
-		});
+		return res.status(201).location("/users/" + req.params.user_id).json({ message: 'User updated!', user: user});
 	});
 };
 
-// Create endpoint /api/users/:id for DELETE
+// Create endpoint /apirest/users/:id for DELETE
 var deleteUser = function(req, res) {
 	if(req.params.user_id != req.user._id){
-		return res.status(401).send({ message: "You don't have permissions to delete another user"});
+		return res.status(401).json({ message: "You don't have permissions to delete another user"});
 	} 
 	User.findById(req.params.user_id, function(err, user){
 		if(err){
-			return res.status(404).send({ message: 'User not found'})
+			return res.status(404).end();
 		}
 		if(!user){
-			return res.status(404).send({ message: 'No such user'})
+			return res.status(404).end();
 		}
 		User.remove({
 			_id: req.params.user_id
 		}, function(err, user) {
 			if (err){
-				return res.status(404).send({ message: 'Deleting user went wrong'})
+				return res.status(404).end();
 			} else {
-				return res.status(204).send({ message: 'User deleted' });
+				return res.status(204).end();
 			}
 		});	
 	});
 };
 
+// Create endpoint /apirest/users/:id/events for GET
 var OwnedEvents = function(req, res) {
 	if(req.params.user_id != req.user._id){
-		return res.status(401).send({ message: "You don't have permissions to check events belong to another user"});
+		return res.status(401).json({ message: "You don't have permissions to check events belong to another user"});
 	} 
 	Event.find({eventUserID: req.user._id}, function(err, events){
 		if(err){
-			return res.status(404).send({ message: 'Events not found'});
+			return res.status(404).end();
 		}
 		if(!events){
-			return res.status(404).send({ message: 'No such events'});
+			return res.status(404).end();
 		}
 		for(var i = 0; i < events.length; i++){
 			var objectEvent = events[i].toObject();
 			delete objectEvent.eventUserID;
 			events[i] = objectEvent;
 		}
-		res.status(200).send(events);
+		res.status(200).json(events);
 	});
 };
 
-module.exports = {getUsers, postUser, getUser, putUser, deleteUser, OwnedEvents}
+module.exports = {getUsers, postUser, getUser, updateUser, deleteUser, OwnedEvents}
 
 

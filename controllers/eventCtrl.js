@@ -1,19 +1,18 @@
+'use strict'
 var Event 	   = require('../models/eventModel');
 
-// Create endpoint /api/events for GET
+// Create endpoint /apirest/events for GET
 var getEvents = function(req,res){
 	Event.find(function(err, event){
 		if(err){
-			res.status(400);
-			return res.send(err);
+			return res.status(400).end();
 		} else{
-			res.status(200);
-			res.json(event);
+			return res.status(200).json(event);
 		}
 	});
 }; 
 
-// Create endpoint /api/events for POST
+// Create endpoint /apirest/events for POST
 var postEvent = function(req,res){
 	var newEvent = new Event({
 		eventName: req.body.eventName,
@@ -24,76 +23,72 @@ var postEvent = function(req,res){
 	});
 	newEvent.save(function(err){
 		if(err){
-			res.status(409);
-			return res.send(err);
+			return res.status(409).end();
 		} else{
-			res.status(201);
-			return res.send({ message: 'Event created'});				
+			return res.status(201).location("/events/" + req.user._id).json({ message: 'Event created', event: newEvent});				
 		}
 	});
 }; 
 
-// Create endpoint /api/events/:id for GET
+// Create endpoint /apirest/events/:id for GET
 var getEvent = function(req, res) {
 	Event.findById(req.params.event_id, function(err, event) {
 		if(!event){
-			res.status(404);
-			return res.send({message: 'No such event'});
+			return res.status(404).end();
 		}
 		if(err){
-			console.log(err);
-			return res.status(404).send({message: 'Couldn\'t find this Event'});
+			return res.status(404).end();
 		}else{
-			res.status(200);
-			res.json(event);				
+			return res.status(200).json(event);		
 		}
 	});
 }; 
 
-// Create endpoint /api/events/:id for PUT
-var putEvent = function(req, res) {
+// Create endpoint /apirest/events/:id for PATCH
+var updateEvent = function(req, res) {
 	Event.findById(req.params.event_id, function(err, event) {
+		if(event.eventUserID != String(req.user._id)){
+			return res.status(401).send({message: "You don't have permissions to update this workshop"})
+		}
 		if (err){
-			console.log(err);
-			return res.status(404).send({message: 'Couldn\'t find this Event'})
+			return res.status(404).end();
 		}
 		if(!event){
-			return res.status(404).send({message: 'No such event'})
+			return res.status(404).end();
 		}
 
-		Event.eventName = req.body.eventName;
-		Event.save(function(err) {
+		Event.update({_id: req.params.event_id}, req.body, function(err) {
 			if (err){
-				res.status(400);
-				return res.send(err);
+				return res.status(400).end();
 			}else{
-				return res.status(200).send({ message: 'Event updated!' });
+				return res.status(201).location("/events/" + req.params.event_id).json({ message: 'Event updated!', event: event });
 			}
 		});
 	});
 };
 
-// Create endpoint /api/events/:id for DELETE
+// Create endpoint /apirest/events/:id for DELETE
 var deleteEvent = function(req, res) {
 	Event.findById(req.params.event_id , function(err, event){
+		if(event.eventUserID != String(req.user._id)){
+			return res.status(401).send({message: "You don't have permissions to delete this workshop"})
+		}
 		if(err) {
-			console.log(err);
-			return res.status(404).send({ message: 'Event not found'})
+			return res.status(404).end();
 		}
 		if(!event){
-			return res.status(404).send({ message: 'Event not found'});
+			return res.status(404).end();
 		}
 		Event.remove({
 			_id: req.params.event_id
 		}, function(err, event) {
 			if (err){
-				res.status(404);
-				return res.send(err);
+				return res.status(404).end();
 			}else{
-				return res.status(200).send({ message: 'Event deleted' });
+				return res.status(204).end();
 			}
 		});
 	});
 };
 
-module.exports = {getEvents, postEvent, getEvent, putEvent, deleteEvent}
+module.exports = {getEvents, postEvent, getEvent, updateEvent, deleteEvent}
