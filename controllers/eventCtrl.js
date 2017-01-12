@@ -37,7 +37,7 @@ var getEvent = function(req, res) {
 			return res.status(404).end();
 		}
 		if(err){
-			return res.status(404).end();
+			return res.status(400).end();
 		}else{
 			return res.status(200).json(event);		
 		}
@@ -74,7 +74,7 @@ var deleteEvent = function(req, res) {
 			return res.status(401).send({message: "You don't have permissions to delete this workshop"})
 		}
 		if(err) {
-			return res.status(404).end();
+			return res.status(400).end();
 		}
 		if(!event){
 			return res.status(404).end();
@@ -83,7 +83,7 @@ var deleteEvent = function(req, res) {
 			_id: req.params.event_id
 		}, function(err, event) {
 			if (err){
-				return res.status(404).end();
+				return res.status(400).end();
 			}else{
 				return res.status(204).end();
 			}
