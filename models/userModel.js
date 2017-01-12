@@ -22,6 +22,14 @@ var userModel = new Schema({
     versionKey: false
 });
 
+userModel.methods.toClient = function(){
+    var user = this.toObject();
+    //Rename fields
+    user.id = user._id;
+    delete user._id;
+    return user;
+}
+
 // Execute before each user.save() call
 userModel.pre('save', function (callback) {
     var user = this;

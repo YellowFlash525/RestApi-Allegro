@@ -11,7 +11,7 @@ var getUsers = function(req,res){
 		}else{
 			return res.status(200).json(users);
 		}
-	});
+	}).select('-userPassword');
 };
 
 // Create endpoint /apirest/users for POST
@@ -32,7 +32,7 @@ var postUser = function(req,res){
 			} else {
 				return res.location("/users/" + newUser._id).json({ message: 'Successful created new user.', user: newUser});
 			}
-		});
+		}).select('-userPassword');
 	}
 };
 
@@ -40,13 +40,13 @@ var postUser = function(req,res){
 var getUser = function(req, res) {
 	User.findById(req.params.user_id, function(err, user) {
 		if (err){
-			return res.status(404).end();
+			return res.status(400).end();
 		}
 		if(!user){
 			return res.status(404).end();
 		}
-		return res.status(200).json(user);
-	});
+		return res.status(200).json({user: user.toClient()});
+	}).select('-userPassword');
 };
 
 // Create endpoint /apirest/users/:id for PATCH
@@ -61,13 +61,13 @@ var updateUser = function(req, res) {
 
 	User.findByIdAndUpdate({ _id : req.params.user_id}, req.body, function(err, user) {
 		if(err){
-			return res.status(404).end();
+			return res.status(400).end();
 		}
 		if(!user){
 			return res.status(404).end();
 		}
 		return res.status(201).location("/users/" + req.params.user_id).json({ message: 'User updated!', user: user});
-	});
+	}).select('-userPassword');
 };
 
 // Create endpoint /apirest/users/:id for DELETE
@@ -77,7 +77,7 @@ var deleteUser = function(req, res) {
 	} 
 	User.findById(req.params.user_id, function(err, user){
 		if(err){
-			return res.status(404).end();
+			return res.status(400).end();
 		}
 		if(!user){
 			return res.status(404).end();
@@ -86,7 +86,7 @@ var deleteUser = function(req, res) {
 			_id: req.params.user_id
 		}, function(err, user) {
 			if (err){
-				return res.status(404).end();
+				return res.status(400).end();
 			} else {
 				return res.status(204).end();
 			}
@@ -101,18 +101,13 @@ var OwnedEvents = function(req, res) {
 	} 
 	Event.find({eventUserID: req.user._id}, function(err, events){
 		if(err){
-			return res.status(404).end();
+			return res.status(400).end();
 		}
 		if(!events){
 			return res.status(404).end();
 		}
-		for(var i = 0; i < events.length; i++){
-			var objectEvent = events[i].toObject();
-			delete objectEvent.eventUserID;
-			events[i] = objectEvent;
-		}
 		res.status(200).json(events);
-	});
+	}).select('-eventUserID');
 };
 
 module.exports = {getUsers, postUser, getUser, updateUser, deleteUser, OwnedEvents}

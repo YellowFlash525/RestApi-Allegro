@@ -51,7 +51,7 @@ var updateEvent = function(req, res) {
 			return res.status(401).send({message: "You don't have permissions to update this workshop"})
 		}
 		if (err){
-			return res.status(404).end();
+			return res.status(400).end();
 		}
 		if(!event){
 			return res.status(404).end();
