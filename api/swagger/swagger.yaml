@@ -1,0 +1,449 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: REST API
+  description: Move your app forward with the Uber API
+  version: "1.0.0"
+# the domain of the service
+host: localhost:8080
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+basePath: /apirest
+produces:
+  - application/json
+paths:
+  /events:
+    get:
+      summary: Events List
+      description: |
+        The events endpoint returns information about events created by user. The response includes the display name and other details about each events.
+      parameters:
+        - name: eventName
+          in: query
+          description: Event name.
+          required: true
+          type: string
+          format: uuid
+        - name: eventCategory
+          in: query
+          description: Event category.
+          required: true
+          type: string
+        - name: eventDate
+          in: query
+          description: Event date..
+          required: true
+          type: string
+        - name: eventPlace
+          in: query
+          description: Event place.
+          required: true
+          type: string
+        - name: eventUserID
+          in: query
+          description: Event category.
+          type: string
+          format: uuid
+      tags:
+        - events
+      responses:
+        200:
+          description: Events list,
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/events'
+        400:
+          description: Bad reqest.
+    post:
+      summary: Add event.
+      description: |
+        Add event.
+      parameters:
+        - name: eventName
+          in: query
+          description: Event name.
+          required: true
+          type: string
+          format: uuid
+        - name: eventCategory
+          in: query
+          description: Event category.
+          required: true
+          type: string
+        - name: eventDate
+          in: query
+          description: Event date..
+          required: true
+          type: string
+        - name: eventPlace
+          in: query
+          description: Event place.
+          required: true
+          type: string
+        - name: eventUserID
+          in: query
+          description: Event category.
+          type: string
+          format: uuid
+      tags:
+        - events
+      responses:
+        200:
+          description: Events list.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/events'
+        409:
+          description: Conflict explained.
+  /events/:id:
+    get:
+      summary: Event details.
+      description: |
+       The events/id endpoint returns information about event. The response includes all details about event.
+      parameters:
+        - name: eventName
+          in: query
+          description: Event name.
+          required: true
+          type: string
+          format: uuid
+        - name: eventCategory
+          in: query
+          description: Event category.
+          required: true
+          type: string
+        - name: eventDate
+          in: query
+          description: Event date..
+          required: true
+          type: string
+        - name: eventPlace
+          in: query
+          description: Event place.
+          required: true
+          type: string
+        - name: eventUserID
+          in: query
+          description: Event category.
+          type: string
+          format: uuid
+      tags:
+        - events
+      responses:
+        200:
+          description: Event details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/events'
+        400:
+          description: Bad reqest.
+    patch:
+      summary: Edit event.
+      description: |
+       Edit event.
+      parameters:
+        - name: eventName
+          in: query
+          description: Event name.
+          required: true
+          type: string
+          format: uuid
+        - name: eventCategory
+          in: query
+          description: Event category.
+          required: true
+          type: string
+        - name: eventDate
+          in: query
+          description: Event date..
+          required: true
+          type: string
+        - name: eventPlace
+          in: query
+          description: Event place.
+          required: true
+          type: string
+        - name: eventUserID
+          in: query
+          description: Event category.
+          type: string
+          format: uuid
+      tags:
+        - events
+      responses:
+        200:
+          description: Event updated.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/events'
+        400:
+          description: Bad reqest.
+    delete:
+      summary: Delete event.
+      description: |
+       Delete event.
+      parameters:
+        - name: eventName
+          in: query
+          description: Event name.
+          required: true
+          type: string
+          format: uuid
+        - name: eventCategory
+          in: query
+          description: Event category.
+          required: true
+          type: string
+        - name: eventDate
+          in: query
+          description: Event date..
+          required: true
+          type: string
+        - name: eventPlace
+          in: query
+          description: Event place.
+          required: true
+          type: string
+        - name: eventUserID
+          in: query
+          description: Event category.
+          type: string
+          format: uuid
+      tags:
+        - events
+      responses:
+        204:
+          description: No content.
+        404:
+          description: Not found.
+          
+  /users:
+    get:
+      summary: User List
+      description: |
+        The users endpoint returns information about users. The response includes the display name and other details about each users.
+      parameters:
+        - name: userLogin
+          in: query
+          description: User login.
+          required: true
+          type: string
+          format: uuid
+        - name: userPassword
+          in: query
+          description: User password.
+          required: true
+          type: string
+        - name: userName
+          in: query
+          description: User name.
+          type: string
+        - name: userEmail
+          in: query
+          description: User email.
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - users
+      responses:
+        200:
+          description: Users list,
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/users'
+        400:
+          description: Bad reqest.
+    post:
+      summary: Add user.
+      description: |
+        Add user.
+      parameters:
+        - name: userLogin
+          in: query
+          description: User login.
+          required: true
+          type: string
+          format: uuid
+        - name: userPassword
+          in: query
+          description: User password.
+          required: true
+          type: string
+        - name: userName
+          in: query
+          description: User name.
+          type: string
+        - name: userEmail
+          in: query
+          description: User email.
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - users
+      responses:
+        201:
+          description: Created.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/users'
+        401:
+          description: Unauthorized.
+        409:
+          description: Conflict explained.
+  /users/:id:
+    get:
+      summary: User details.
+      description: |
+       The users/id endpoint returns information about user. The response includes all details about user.
+      parameters:
+        - name: userLogin
+          in: query
+          description: User login.
+          required: true
+          type: string
+          format: uuid
+        - name: userPassword
+          in: query
+          description: User password.
+          required: true
+          type: string
+        - name: userName
+          in: query
+          description: User name.
+          type: string
+        - name: userEmail
+          in: query
+          description: User email.
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - users
+      responses:
+        200:
+          description: User details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/users'
+        404:
+          description: Not found.
+    patch:
+      summary: Edit user.
+      description: |
+       Edit user.
+      parameters:
+        - name: userLogin
+          in: query
+          description: User login.
+          required: true
+          type: string
+          format: uuid
+        - name: userPassword
+          in: query
+          description: User password.
+          required: true
+          type: string
+        - name: userName
+          in: query
+          description: User name.
+          type: string
+        - name: userEmail
+          in: query
+          description: User email.
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - users
+      responses:
+        201:
+          description: Created.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/users'
+        401:
+          description: Unauthorized.
+        404:
+          description: Not found.
+    delete:
+      summary: Delete user.
+      description: |
+       Delete user.
+      parameters:
+        - name: userLogin
+          in: query
+          description: User login.
+          required: true
+          type: string
+          format: uuid
+        - name: userPassword
+          in: query
+          description: User password.
+          required: true
+          type: string
+        - name: userName
+          in: query
+          description: User name.
+          type: string
+        - name: userEmail
+          in: query
+          description: User email.
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - users
+      responses:
+        204:
+          description: No content.
+        401:
+          description: Unauthorized.  
+        404:
+          description: Not found.
+definitions:
+  events:
+    type: object
+    properties:
+      eventName:
+        type: string
+        description: Unique identifier representing a specific event.
+      eventCategory:
+        type: string
+        description: Event ategory.
+      eventDate:
+        type: string
+        description: Event date.
+      eventPlace:
+        type: string
+        description: Event place.
+      eventUserID:
+        type: integer
+        description: Unique identifier representing user who created event.
+  users:
+    type: object
+    properties:
+      userLogin:
+        type: string
+        description: Unique user login.
+      userPassword:
+        type: string
+        description: User password.
+      userName:
+        type: string
+        description: User name.
+      userEmail:
+        type: string
+        description: Unique user email.
