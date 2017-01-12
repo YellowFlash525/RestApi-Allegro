@@ -25,7 +25,7 @@ var postEvent = function(req,res){
 		if(err){
 			return res.status(409).end();
 		} else{
-			return res.status(201).location("/events/" + req.user._id).json({ message: 'Event created', event: newEvent});				
+			return res.status(201).location("/events/" + req.user._id).json({ message: 'Event created', event: newEvent.toClient()});				
 		}
 	});
 }; 
@@ -39,13 +39,13 @@ var getEvent = function(req, res) {
 		if(err){
 			return res.status(400).end();
 		}else{
-			return res.status(200).json(event);		
+			return res.status(200).json({event: event.toClient()});		
 		}
 	});
 }; 
 
 // Create endpoint /apirest/events/:id for PATCH
-var updateEvent = function(req, res) {
+var patchEvent = function(req, res) {
 	Event.findById(req.params.event_id, function(err, event) {
 		if(event.eventUserID != String(req.user._id)){
 			return res.status(401).send({message: "You don't have permissions to update this workshop"})
@@ -61,7 +61,7 @@ var updateEvent = function(req, res) {
 			if (err){
 				return res.status(400).end();
 			}else{
-				return res.status(201).location("/events/" + req.params.event_id).json({ message: 'Event updated!', event: event });
+				return res.status(200).location("/events/" + req.params.event_id).json({ message: 'Event updated!', event: event.toClient() });
 			}
 		});
 	});
@@ -91,4 +91,4 @@ var deleteEvent = function(req, res) {
 	});
 };
 
-module.exports = {getEvents, postEvent, getEvent, updateEvent, deleteEvent}
+module.exports = {getEvents, postEvent, getEvent, patchEvent, deleteEvent}

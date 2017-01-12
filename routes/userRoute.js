@@ -13,11 +13,11 @@ router.route('/users/:user_id')
 	// get the bear with that id
 	.get(authController.isAuthenticated, userController.getUser)
 	// update the bear with this id
-	.patch(authController.isAuthenticated, userController.updateUser)
+	.patch(authController.isAuthenticated, userController.patchUser)
 	// delete the bear with this id
 	.delete(authController.isAuthenticated, userController.deleteUser);
 
 router.route('/users/:user_id/events')
-	.get(authController.isAuthenticated, userController.OwnedEvents)
+	.get(authController.isAuthenticated, userController.getOwnedEvents)
 
 module.exports = router;

@@ -12,7 +12,7 @@ router.route('/events/:event_id')
 	// get the bear with that id
 	.get(authController.isAuthenticated, eventController.getEvent)
 	// update the bear with this id
-	.patch(authController.isAuthenticated, eventController.updateEvent)
+	.patch(authController.isAuthenticated, eventController.patchEvent)
 	// delete the bear with this id
 	.delete(authController.isAuthenticated, eventController.deleteEvent);
 

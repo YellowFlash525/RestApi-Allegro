@@ -7,15 +7,18 @@ var WORK_FLOW = 10;
 var userModel = new Schema({
     userLogin: {
         type: String,
-        unique: true
+        unique: true,
+        require: true
     },
 	userPassword: {
-        type: String
+        type: String,
+        require: true
     },
 	userName: String,
 	userEmail: {
         type: String,
-        unique: true
+        unique: true,
+        require: true
     },
 },
 {
@@ -26,6 +29,7 @@ userModel.methods.toClient = function(){
     var user = this.toObject();
     //Rename fields
     user.id = user._id;
+    delete user.userPassword;
     delete user._id;
     return user;
 }

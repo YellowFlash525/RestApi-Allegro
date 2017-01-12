@@ -7,7 +7,7 @@ var bcrypt       = require('bcryptjs');
 var getUsers = function(req,res){
 	User.find(function(err,users){
 		if(err){
-			return res.status(400).json({message: 'Users not found'});
+			return res.status(400).end();
 		}else{
 			return res.status(200).json(users);
 		}
@@ -17,7 +17,7 @@ var getUsers = function(req,res){
 // Create endpoint /apirest/users for POST
 var postUser = function(req,res){
 	if (!req.body.userLogin || !req.body.userPassword) {
-		return res.status(401);
+		return res.status(401).end();
 	} else {
 		var newUser = new User({
 		   userLogin: req.body.userLogin,
@@ -30,9 +30,9 @@ var postUser = function(req,res){
 			if (err){
 				return res.status(409).json({ message: 'User already exists.'});	
 			} else {
-				return res.location("/users/" + newUser._id).json({ message: 'Successful created new user.', user: newUser});
+				return res.status(201).location("/users/" + newUser._id).json({ message: 'Successful created new user.', user: newUser.toClient()});
 			}
-		}).select('-userPassword');
+		});
 	}
 };
 
@@ -46,11 +46,11 @@ var getUser = function(req, res) {
 			return res.status(404).end();
 		}
 		return res.status(200).json({user: user.toClient()});
-	}).select('-userPassword');
+	});
 };
 
 // Create endpoint /apirest/users/:id for PATCH
-var updateUser = function(req, res) {
+var patchUser = function(req, res) {
 	if(req.params.user_id != req.user._id){
 		return res.status(401).json({ message: "You don't have permissions to update another user"});
 	} 
@@ -66,8 +66,8 @@ var updateUser = function(req, res) {
 		if(!user){
 			return res.status(404).end();
 		}
-		return res.status(201).location("/users/" + req.params.user_id).json({ message: 'User updated!', user: user});
-	}).select('-userPassword');
+		return res.status(200).location("/users/" + req.params.user_id).json({ message: 'User updated!', user: user.toClient()});
+	});
 };
 
 // Create endpoint /apirest/users/:id for DELETE
@@ -95,7 +95,7 @@ var deleteUser = function(req, res) {
 };
 
 // Create endpoint /apirest/users/:id/events for GET
-var OwnedEvents = function(req, res) {
+var getOwnedEvents = function(req, res) {
 	if(req.params.user_id != req.user._id){
 		return res.status(401).json({ message: "You don't have permissions to check events belong to another user"});
 	} 
@@ -110,6 +110,6 @@ var OwnedEvents = function(req, res) {
 	}).select('-eventUserID');
 };
 
-module.exports = {getUsers, postUser, getUser, updateUser, deleteUser, OwnedEvents}
+module.exports = {getUsers, postUser, getUser, patchUser, deleteUser, getOwnedEvents}
 
 

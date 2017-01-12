@@ -27,4 +27,12 @@ var eventModel   = new Schema({
     versionKey: false
 });
 
+eventModel.methods.toClient = function(){
+	var event = this.toObject();
+    //Rename fields
+    event.id = event._id;
+    delete event._id;
+    return event;
+}
+
 module.exports = mongoose.model('Event', eventModel);
