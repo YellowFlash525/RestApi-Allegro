@@ -1,2 +1,0 @@
-1. otworzyæ restapi/public/index.html
-2. w przegl¹darce podaæ adres: http://localhost:8080/swagger.json

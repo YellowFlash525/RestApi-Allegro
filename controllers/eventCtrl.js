@@ -3,11 +3,17 @@ var Event 	   = require('../models/eventModel');
 
 // Create endpoint /apirest/events for GET
 var getEvents = function(req,res){
-	Event.find(function(err, event){
+	Event.find(function(err, events){
 		if(err){
-			return res.status(400).end();
+			return res.status(400).json({message: "Bad Requested"});
 		} else{
-			return res.status(200).json(event);
+			for(var i=0; i< events.length; i++){
+				var temp = events[i].toObject();
+				temp.id = temp._id;
+    			delete temp._id;
+				events[i] = temp;
+			}
+			return res.status(200).json({events:events});
 		}
 	});
 }; 
@@ -23,9 +29,9 @@ var postEvent = function(req,res){
 	});
 	newEvent.save(function(err){
 		if(err){
-			return res.status(409).end();
+			return res.status(409).json({message: "Event already exists"});
 		} else{
-			return res.status(201).location("/events/" + req.user._id).json({ message: 'Event created', event: newEvent.toClient()});				
+			return res.status(201).location("http://localhost:8080/apirest/events/" + req.user._id).json({ event: newEvent.toClient()});				
 		}
 	});
 }; 
@@ -34,10 +40,10 @@ var postEvent = function(req,res){
 var getEvent = function(req, res) {
 	Event.findById(req.params.event_id, function(err, event) {
 		if(!event){
-			return res.status(404).end();
+			return res.status(404).json({message: "Not Found Event"});
 		}
 		if(err){
-			return res.status(400).end();
+			return res.status(400).json({message: "Bad Requested"});
 		}else{
 			return res.status(200).json({event: event.toClient()});		
 		}
@@ -51,17 +57,17 @@ var patchEvent = function(req, res) {
 			return res.status(401).send({message: "You don't have permissions to update this workshop"})
 		}
 		if (err){
-			return res.status(400).end();
+			return res.status(400).json({message: "Bad Requested"});
 		}
 		if(!event){
-			return res.status(404).end();
+			return res.status(404).json({message: "Not Found Event"});
 		}
 
 		Event.update({_id: req.params.event_id}, req.body, function(err) {
 			if (err){
-				return res.status(400).end();
+				return res.status(400).json({message: "Bad Requested"});
 			}else{
-				return res.status(200).location("/events/" + req.params.event_id).json({ message: 'Event updated!', event: event.toClient() });
+				return res.status(200).location("http://localhost:8080/apirest/events/" + req.params.event_id).json({ event: event.toClient() });
 			}
 		});
 	});
@@ -74,16 +80,16 @@ var deleteEvent = function(req, res) {
 			return res.status(401).send({message: "You don't have permissions to delete this workshop"})
 		}
 		if(err) {
-			return res.status(400).end();
+			return res.status(400).json({message: "Bad Requested"});
 		}
 		if(!event){
-			return res.status(404).end();
+			return res.status(404).json({message: "Not Found Event"});
 		}
 		Event.remove({
 			_id: req.params.event_id
 		}, function(err, event) {
 			if (err){
-				return res.status(400).end();
+				return res.status(400).json({message: "Bad Requested"});
 			}else{
 				return res.status(204).end();
 			}

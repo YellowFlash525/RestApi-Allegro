@@ -18,7 +18,8 @@ var userModel = new Schema({
 	userEmail: {
         type: String,
         unique: true,
-        require: true
+        require: true,
+        match: /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm
     },
 },
 {
@@ -32,7 +33,7 @@ userModel.methods.toClient = function(){
     delete user.userPassword;
     delete user._id;
     return user;
-}
+};
 
 // Execute before each user.save() call
 userModel.pre('save', function (callback) {

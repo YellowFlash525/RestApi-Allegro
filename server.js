@@ -4,7 +4,6 @@ var app 		= express();
 var morgan		= require('morgan');
 var bodyParser 	= require('body-parser');
 var mongoose   	= require('mongoose');
-var config 		= require("./config/secret");
 var passport 	= require('passport');
 
 var port 		= process.env.PORT || 8080;
@@ -34,19 +33,14 @@ app.get('/', function(req, res) {
   res.send("Witam na stronie Mariana i Kamila");
 });
 
-app.use('/apirest', routeEvents);
-app.use('/apirest', routeUsers);
-
-app.listen(port);
-console.log("server running on port " + port);
-
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
-app.use('/', express.static(__dirname));
-app.get('/swagger.json', function(req, res) {
- res.sendFile(__dirname + '/public/swagger.json');
-});
+app.use('/apirest', routeEvents);
+app.use('/apirest', routeUsers);
+
+app.listen(port);
+console.log("server running on port " + port);
