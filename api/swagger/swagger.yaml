@@ -16,6 +16,10 @@ consumes:
   - application/json
 produces:
   - application/json
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
 paths:
   /events:
     get:
@@ -24,6 +28,8 @@ paths:
         The events endpoint returns information about events created by user. The response includes the display name and other details about each events.
       tags:
         - events
+      security:
+       - basicAuth: []
       responses:
         200:
           description: Events list,
@@ -33,34 +39,23 @@ paths:
               $ref: '#/definitions/events'
         400:
           description: Bad reqest.
+        401:
+          description: Unauthorized.
     post:
       summary: Add event.
       description: |
         Add event.
       parameters:
-        - name: eventName
-          in: query
-          description: Event name.
+        - name: event
+          in: body
+          description: Data event.
           required: true
-          type: string
-          format: uuid
-        - name: eventCategory
-          in: query
-          description: Event category.
-          required: true
-          type: string
-        - name: eventDate
-          in: query
-          description: Event date..
-          required: true
-          type: string
-        - name: eventPlace
-          in: query
-          description: Event place.
-          required: true
-          type: string
+          schema:
+            $ref: '#/definitions/events'
       tags:
         - events
+      security:
+       - basicAuth: []
       responses:
         200:
           description: Events list.
@@ -68,15 +63,25 @@ paths:
             type: array
             items:
               $ref: '#/definitions/events'
+        401:
+          description: Unauthorized.
         409:
           description: Conflict explained.
-  /events/:id:
+  /events/id:
     get:
       summary: Event details.
       description: |
        The events/id endpoint returns information about event. The response includes all details about event.
+      parameters:
+        - name: id
+          in: query
+          description: Display event with ID.
+          required: true
+          type: string
       tags:
         - events
+      security:
+       - basicAuth: []
       responses:
         200:
           description: Event details.
@@ -86,35 +91,28 @@ paths:
               $ref: '#/definitions/events'
         400:
           description: Bad reqest.
+        401:
+          description: Unauthorized.
     patch:
       summary: Edit event.
       description: |
        Edit event.
       parameters:
-        - name: eventName
+        - name: id
           in: query
-          description: Event name.
+          description: Update event with ID.
+          required: true
           type: string
-          format: uuid
-        - name: eventCategory
-          in: query
-          description: Event category.
-          type: string
-        - name: eventDate
-          in: query
-          description: Event date.
-          type: string
-        - name: eventPlace
-          in: query
-          description: Event place.
-          type: string
-        - name: eventUserID
-          in: query
-          description: Event category.
-          type: string
-          format: uuid
+        - name: event
+          in: body
+          description: Data event.
+          required: true
+          schema:
+            $ref: '#/definitions/events'
       tags:
         - events
+      security:
+       - basicAuth: []
       responses:
         200:
           description: Event updated.
@@ -124,15 +122,27 @@ paths:
               $ref: '#/definitions/events'
         400:
           description: Bad reqest.
+        401:
+          description: Unauthorized.
     delete:
       summary: Delete event.
       description: |
        Delete event.
+      parameters:
+        - name: id
+          in: query
+          description: Delete event with ID.
+          required: true
+          type: string
       tags:
         - events
+      security:
+       - basicAuth: []
       responses:
         204:
           description: No content.
+        401:
+          description: Unauthorized.
         404:
           description: Not found.
           
@@ -143,6 +153,8 @@ paths:
         The users endpoint returns information about users. The response includes the display name and other details about each users.
       tags:
         - users
+      security:
+       - basicAuth: []
       responses:
         200:
           description: Users list,
@@ -152,32 +164,19 @@ paths:
               $ref: '#/definitions/users'
         400:
           description: Bad reqest.
+        401:
+          description: Unauthorized.
     post:
       summary: Add user.
       description: |
         Add user.
       parameters:
-        - name: userLogin
-          in: query
-          description: User login.
+        - name: user
+          in: body
+          description: Data user.
           required: true
-          type: string
-          format: uuid
-        - name: userPassword
-          in: query
-          description: User password.
-          required: true
-          type: string
-        - name: userName
-          in: query
-          description: User name.
-          type: string
-        - name: userEmail
-          in: query
-          description: User email.
-          required: true
-          type: string
-          format: uuid
+          schema:
+            $ref: '#/definitions/users'
       tags:
         - users
       responses:
@@ -187,17 +186,23 @@ paths:
             type: array
             items:
               $ref: '#/definitions/users'
-        401:
-          description: Unauthorized.
         409:
           description: Conflict explained.
-  /users/:id:
+  /users/id:
     get:
       summary: User details.
       description: |
        The users/id endpoint returns information about user. The response includes all details about user.
+      parameters:
+        - name: id
+          in: query
+          description: Display user with ID.
+          required: true
+          type: string
       tags:
         - users
+      security:
+       - basicAuth: []
       responses:
         200:
           description: User details.
@@ -205,6 +210,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/users'
+        401:
+          description: Unauthorized.
         404:
           description: Not found.
     patch:
@@ -212,26 +219,21 @@ paths:
       description: |
        Edit user.
       parameters:
-        - name: userLogin
+        - name: id
           in: query
-          description: User login.
+          description: Update user with ID.
+          required: true
           type: string
-          format: uuid
-        - name: userPassword
-          in: query
-          description: User password.
-          type: string
-        - name: userName
-          in: query
-          description: User name.
-          type: string
-        - name: userEmail
-          in: query
-          description: User email.
-          type: string
-          format: uuid
+        - name: user
+          in: body
+          description: New data user.
+          required: true
+          schema:
+            $ref: '#/definitions/users'
       tags:
         - users
+      security:
+       - basicAuth: []
       responses:
         201:
           description: Created.
@@ -247,8 +249,16 @@ paths:
       summary: Delete user.
       description: |
        Delete user.
+      parameters:
+        - name: id
+          in: query
+          description: Delete user with ID.
+          required: true
+          type: string
       tags:
         - users
+      security:
+       - basicAuth: []
       responses:
         204:
           description: No content.
@@ -259,9 +269,11 @@ paths:
 definitions:
   events:
     type: object
+    required: ['eventName','eventCategory','eventDate','eventPlace']
     properties:
       eventName:
         type: string
+        format: uuid
         description: Unique identifier representing a specific event.
       eventCategory:
         type: string
@@ -274,12 +286,14 @@ definitions:
         description: Event place.
       eventUserID:
         type: integer
-        description: Unique identifier representing user who created event.
+        description: User's id.
   users:
     type: object
+    required: ['userLogin','userPassword','userEmail']
     properties:
       userLogin:
         type: string
+        format: uuid
         description: Unique user login.
       userPassword:
         type: string
@@ -289,4 +303,5 @@ definitions:
         description: User name.
       userEmail:
         type: string
+        format: uuid
         description: Unique user email.

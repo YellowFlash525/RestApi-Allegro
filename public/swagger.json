@@ -1,0 +1,479 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "REST API",
+    "description": "Move your app forward with the Uber API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "schemes": [
+    "http"
+  ],
+  "basePath": "/apirest",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "basicAuth": {
+      "type": "basic",
+      "description": "HTTP Basic Authentication. Works over `HTTP` and `HTTPS`"
+    }
+  },
+  "paths": {
+    "/events": {
+      "get": {
+        "summary": "Events List",
+        "description": "The events endpoint returns information about events created by user. The response includes the display name and other details about each events.\n",
+        "tags": [
+          "events"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events list,",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/events"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad reqest."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add event.",
+        "description": "Add event.\n",
+        "parameters": [
+          {
+            "name": "event",
+            "in": "body",
+            "description": "Data event.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/events"
+            }
+          }
+        ],
+        "tags": [
+          "events"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events list.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/events"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "409": {
+            "description": "Conflict explained."
+          }
+        }
+      }
+    },
+    "/events/id": {
+      "get": {
+        "summary": "Event details.",
+        "description": "The events/id endpoint returns information about event. The response includes all details about event.\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Display event with ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "events"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event details.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/events"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad reqest."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Edit event.",
+        "description": "Edit event.\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Update event with ID.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "event",
+            "in": "body",
+            "description": "Data event.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/events"
+            }
+          }
+        ],
+        "tags": [
+          "events"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event updated.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/events"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad reqest."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete event.",
+        "description": "Delete event.\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Delete event with ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "events"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "User List",
+        "description": "The users endpoint returns information about users. The response includes the display name and other details about each users.\n",
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users list,",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad reqest."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add user.",
+        "description": "Add user.\n",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Data user.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "201": {
+            "description": "Created.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict explained."
+          }
+        }
+      }
+    },
+    "/users/id": {
+      "get": {
+        "summary": "User details.",
+        "description": "The users/id endpoint returns information about user. The response includes all details about user.\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Display user with ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Edit user.",
+        "description": "Edit user.\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Update user with ID.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "New data user.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user.",
+        "description": "Delete user.\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Delete user with ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "basicAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "events": {
+      "type": "object",
+      "required": [
+        "eventName",
+        "eventCategory",
+        "eventDate",
+        "eventPlace"
+      ],
+      "properties": {
+        "eventName": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier representing a specific event."
+        },
+        "eventCategory": {
+          "type": "string",
+          "description": "Event ategory."
+        },
+        "eventDate": {
+          "type": "string",
+          "description": "Event date."
+        },
+        "eventPlace": {
+          "type": "string",
+          "description": "Event place."
+        },
+        "eventUserID": {
+          "type": "integer",
+          "description": "User's id."
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "required": [
+        "userLogin",
+        "userPassword",
+        "userEmail"
+      ],
+      "properties": {
+        "userLogin": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique user login."
+        },
+        "userPassword": {
+          "type": "string",
+          "description": "User password."
+        },
+        "userName": {
+          "type": "string",
+          "description": "User name."
+        },
+        "userEmail": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique user email."
+        }
+      }
+    }
+  }
+}
