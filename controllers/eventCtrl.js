@@ -31,7 +31,7 @@ var postEvent = function(req,res){
 		if(err){
 			return res.status(409).json({message: "Event already exists"});
 		} else{
-			return res.status(201).location("http://localhost:8080/apirest/events/" + req.user._id).json({ event: newEvent.toClient()});				
+			return res.status(201).location("http://restapplication.herokuapp.com/apirest/events/" + req.user._id).json({ event: newEvent.toClient()});				
 		}
 	});
 }; 
@@ -67,7 +67,7 @@ var patchEvent = function(req, res) {
 			if (err){
 				return res.status(400).json({message: "Bad Requested"});
 			}else{
-				return res.status(200).location("http://localhost:8080/apirest/events/" + req.params.event_id).json({ event: event.toClient() });
+				return res.status(200).location("http://restapplication.herokuapp.com/apirest/events/" + req.params.event_id).json({ event: event.toClient() });
 			}
 		});
 	});

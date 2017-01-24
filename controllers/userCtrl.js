@@ -37,7 +37,7 @@ var postUser = function(req,res){
 			if (err){
 				return res.status(409).json({ message: 'User exists or your email is invalid.'});	
 			} else {
-				return res.status(201).location("http://localhost:8080/apirest/users/" + newUser._id).json({ user: newUser.toClient()});
+				return res.status(201).location("http://restapplication.herokuapp.com/apirest/users/" + newUser._id).json({ user: newUser.toClient()});
 			}
 		});
 	}
@@ -76,7 +76,7 @@ var patchUser = function(req, res) {
 		if(!user){
 			return res.status(404).json({message: "Not Found User"});
 		}
-		return res.status(200).location("http://localhost:8080/apirest/users/" + req.params.user_id).json({ user: user.toClient()});
+		return res.status(200).location("http://restapplication.herokuapp.com:8080/apirest/users/" + req.params.user_id).json({ user: user.toClient()});
 	});
 };
 
