@@ -25,9 +25,11 @@
     "angular-route": "^1.5.8",
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.0.1",
+    "depd": "^1.0.1",
     "express": "^4.14.0",
     "jsonwebtoken": "^7.2.1",
     "mongoose": "^4.6.2",
+    "morgan": "^1.6.1",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0"
   }

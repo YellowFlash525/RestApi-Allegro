@@ -6,7 +6,7 @@ info:
   description: Move your app forward with the Uber API
   version: "1.0.0"
 # the domain of the service
-host: localhost:8080
+host: restapplication.herokuapp.com
 # array of all schemes that your API supports
 schemes:
   - http
@@ -264,6 +264,34 @@ paths:
           description: No content.
         401:
           description: Unauthorized.  
+        404:
+          description: Not found.
+  /users/id/events:
+    get:
+      summary: User's events.
+      description: |
+       The users/id/events endpoint returns information about user's evebts. The response includes all details about user's events.
+      parameters:
+        - name: id
+          in: query
+          description: Display user with ID.
+          required: true
+          type: string
+      tags:
+        - users
+      security:
+       - basicAuth: []
+      responses:
+        200:
+          description: User details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/events'
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized.
         404:
           description: Not found.
 definitions:
